@@ -14,6 +14,16 @@ node scripts/serve.js
 
 Open **http://127.0.0.1:4829/learning-progress/**. Check individual lessons, finish all lessons, or reset the sample course. Progress is local browser data; this demo has no account, server database, real course enrollment, or deployment.
 
+## Workspace views
+
+| Menu | What it opens |
+| --- | --- |
+| Learning path | The six-lesson checklist and course overview |
+| My progress | Live completion totals, lesson status, and the next lesson to practice |
+| Workflow guide | Six practical steps for the fork, branch, pull request, feedback, and merge workflow |
+
+The selected menu item follows the current view. Each view has a shareable local URL using `#learning-path`, `#my-progress`, or `#workflow-guide`; browser Back, Forward, and refresh retain the selected view. Lesson completion is shared across views and saved in the same browser. Use the guide's practice and progress links to continue the course.
+
 ## Test the feature
 
 ```sh
