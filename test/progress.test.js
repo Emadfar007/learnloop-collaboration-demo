@@ -53,3 +53,35 @@ test('rejects negative durations and non-boolean completion', () => {
   assert.throws(() => calculateCourseProgress([lesson('bad', -1)]), /non-negative/);
   assert.throws(() => calculateCourseProgress([lesson('bad', 10, 'yes')]), /boolean/);
 });
+
+test('zero-duration lessons still count toward completion', () => {
+  const progress = calculateCourseProgress([lesson('welcome', 0, true), lesson('practice', 0)]);
+  assert.equal(progress.percentComplete, 50);
+  assert.equal(progress.totalMinutes, 0);
+  assert.equal(progress.remainingMinutes, 0);
+  assert.equal(progress.status, 'in-progress');
+});
+
+test('fractional minutes stay precise and do not weight lesson completion', () => {
+  const progress = calculateCourseProgress([lesson('intro', 0.25, true), lesson('practice', 1.5)]);
+  assert.equal(progress.percentComplete, 50);
+  assert.equal(progress.totalMinutes, 1.75);
+  assert.equal(progress.remainingMinutes, 1.5);
+});
+
+test('rejects non-finite durations and numeric strings', () => {
+  for (const duration of [NaN, Infinity, -Infinity, '10']) {
+    assert.throws(() => calculateCourseProgress([lesson('invalid', duration)]), /finite/);
+  }
+});
+
+test('rejects total duration overflow even when each duration is finite', () => {
+  assert.throws(() => calculateCourseProgress([
+    lesson('first', Number.MAX_VALUE), lesson('second', Number.MAX_VALUE)
+  ]), RangeError);
+});
+
+test('rejects blank identifiers and sparse course arrays', () => {
+  assert.throws(() => calculateCourseProgress([lesson(' ', 10)]), /non-empty/);
+  assert.throws(() => calculateCourseProgress(new Array(1)), /object/);
+});

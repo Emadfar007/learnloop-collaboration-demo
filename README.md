@@ -20,7 +20,7 @@ Open **http://127.0.0.1:4829/learning-progress/**. Check individual lessons, fin
 node --test
 ```
 
-The built-in Node.js tests cover empty, new, partially completed, and finished courses, immutable input, and invalid records. The GitHub Actions workflow also checks JavaScript syntax on feature pushes and pull requests targeting `main`.
+The built-in Node.js tests cover empty, new, partially completed, and finished courses, immutable input, invalid records, fractional and zero durations, non-finite values, and duration overflow. The GitHub Actions workflow also checks JavaScript syntax on feature pushes and pull requests targeting `main`.
 
 ## Feature scope
 
@@ -31,6 +31,21 @@ The built-in Node.js tests cover empty, new, partially completed, and finished c
 | `test/progress.test.js` | Automated checks for behavior and invalid inputs |
 | `scripts/serve.js` | Loopback-only static preview server |
 | `.github/workflows/tests.yml` | Tests and syntax checks in GitHub Actions |
+
+## Progress API
+
+```js
+import { calculateCourseProgress } from './src/progress.js';
+
+calculateCourseProgress([
+  { id: 'intro', durationMinutes: 0.25, completed: true },
+  { id: 'practice', durationMinutes: 1.5, completed: false }
+]);
+// { totalLessons: 2, completedLessons: 1, percentComplete: 50,
+//   remainingMinutes: 1.5, totalMinutes: 1.75, status: 'in-progress' }
+```
+
+Completion is **lesson-count based**, rounded to the nearest whole percentage. Durations do not weight the percentage. Remaining minutes sum unfinished lesson durations without rounding. Each lesson needs a unique non-empty string ID, a finite non-negative numeric duration, and a boolean completion value. Zero and fractional durations are valid; non-finite values, sparse arrays, duplicate IDs, and combined-duration overflow are rejected. Empty courses return zero progress with `not-started` status, and the calculation never modifies its inputs.
 
 ## Collaboration
 
