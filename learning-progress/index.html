@@ -9,23 +9,23 @@
     <script type="module" src="./app.js"></script>
   </head>
   <body>
-    <a class="skip-link" href="#curriculum">Skip to course lessons</a>
+    <a class="skip-link" href="#learning-path" data-route="learning-path" data-focus-lesson="fork">Skip to course lessons</a>
     <aside class="sidebar" aria-label="Workspace navigation">
-      <a class="brand" href="#top" aria-label="LearnLoop home">
+      <a class="brand" href="#learning-path" data-route="learning-path" aria-label="LearnLoop home">
         <span class="brand-symbol" aria-hidden="true">↗</span>
         <span>learnloop<span class="brand-dot">.</span></span>
       </a>
       <p class="workspace-label">YOUR WORKSPACE</p>
       <nav class="navigation" aria-label="Learning workspace">
-        <a href="#curriculum" class="nav-link is-current" aria-current="page">
+        <a href="#learning-path" data-route="learning-path" class="nav-link is-current" aria-current="page">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 8 9-5 9 5-9 5-9-5Zm4 3v6c3 3 7 3 10 0v-6M21 8v8"/></svg>
           Learning path
         </a>
-        <a href="#progress" class="nav-link">
+        <a href="#my-progress" data-route="my-progress" class="nav-link">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19V9m7 10V4m7 15v-7M3 21h18"/></svg>
           My progress
         </a>
-        <a href="#workflow" class="nav-link">
+        <a href="#workflow-guide" data-route="workflow-guide" class="nav-link">
           <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="7" height="6" rx="2"/><rect x="14" y="14" width="7" height="6" rx="2"/><path d="M6 10v7h8M17 14V7h-7"/></svg>
           Workflow guide
         </a>
@@ -42,17 +42,18 @@
       <header class="page-heading">
         <div>
           <p class="eyebrow">COURSE PROGRESS LAB</p>
-          <h1>From fork to finished.</h1>
-          <p class="heading-description">Make progress you can see. Build skills you can use.</p>
+          <h1 id="page-title">From fork to finished.</h1>
+          <p id="page-description" class="heading-description">Make progress you can see. Build skills you can use.</p>
         </div>
         <span class="practice-pill"><span aria-hidden="true">✦</span> Your practice workspace</span>
       </header>
 
       <div class="learning-grid">
-        <section class="course-card" aria-labelledby="course-title">
+        <div class="view-column">
+        <section id="learning-path-view" class="course-card workspace-view" aria-labelledby="course-title">
           <div class="course-header">
             <span class="course-tag">GIT &amp; GITHUB · PRACTICAL COURSE</span>
-            <h2 id="course-title">Git collaboration,<br>a skill you can practice.</h2>
+            <h2 id="course-title" tabindex="-1">Git collaboration,<br>a skill you can practice.</h2>
             <p>Six focused lessons. One complete contribution.</p>
             <div class="header-decoration" aria-hidden="true"><span>↗</span></div>
           </div>
@@ -65,6 +66,95 @@
             <p class="course-footnote">Check off each lesson when you finish practicing it.</p>
           </div>
         </section>
+
+        <section id="my-progress-view" class="course-card workspace-view" aria-labelledby="progress-detail-title" hidden>
+          <div class="course-header">
+            <span class="course-tag">YOUR COURSE · LIVE SUMMARY</span>
+            <h2 id="progress-detail-title" tabindex="-1">See how far<br>you have come.</h2>
+            <p>Your checklist and this summary always stay in sync.</p>
+          </div>
+          <div class="view-body">
+            <div class="progress-overview" aria-label="Course progress summary">
+              <div><strong id="detail-completed-count">0 of 6</strong><span>Lessons finished</span></div>
+              <div><strong id="studied-minutes">0 min</strong><span>Completed lesson time</span></div>
+              <div><strong id="detail-percent-complete">0%</strong><span>Course complete</span></div>
+            </div>
+            <section class="next-lesson-card" aria-labelledby="next-lesson-heading">
+              <p class="eyebrow" id="next-lesson-heading">YOUR NEXT STEP</p>
+              <h3 id="next-lesson-title">Fork &amp; clone your starting point</h3>
+              <p id="next-lesson-description">12 minutes · Make the project yours, locally and on GitHub</p>
+              <a id="next-lesson-link" class="button button-primary route-button" href="#learning-path" data-route="learning-path" data-focus-lesson="fork">Continue learning <span aria-hidden="true">↗</span></a>
+            </section>
+            <div class="section-heading progress-list-heading"><h3>Every lesson, at a glance</h3><span>Updates as you learn</span></div>
+            <ol id="progress-lesson-list" class="progress-lesson-list" aria-label="Lesson completion details"></ol>
+            <p class="view-note">Completed time is the planned duration of checked lessons. Completion is based on the number of lessons, not time spent in the browser.</p>
+            <a class="text-link" href="#workflow-guide" data-route="workflow-guide">Need the steps? Open the workflow guide <span aria-hidden="true">↗</span></a>
+          </div>
+        </section>
+
+        <section id="workflow-guide-view" class="course-card workspace-view" aria-labelledby="workflow-guide-title" hidden>
+          <div class="course-header">
+            <span class="course-tag">GIT &amp; GITHUB · YOUR PRACTICE GUIDE</span>
+            <h2 id="workflow-guide-title" tabindex="-1">One contribution.<br>Six clear steps.</h2>
+            <p>Follow the workflow, then mark each lesson complete.</p>
+          </div>
+          <div class="view-body">
+            <p class="guide-intro">Use a repository you are allowed to change. In the example commands, replace <code>YOUR-USERNAME</code> and <code>YOUR-FORK</code> with your own GitHub username and fork name.</p>
+            <ol class="guide-list">
+              <li>
+                <div class="guide-step-heading"><span aria-hidden="true">01</span><h3>Fork and clone</h3><span class="guide-duration">12 min</span></div>
+                <p>Open a public sample on GitHub and select <strong>Fork</strong>. Choose your account, create the fork, and clone its URL to your computer.</p>
+                <pre><code>git clone https://github.com/YOUR-USERNAME/YOUR-FORK.git
+cd YOUR-FORK</code></pre>
+                <a class="text-link" href="#learning-path" data-route="learning-path" data-focus-lesson="fork">Practice lesson 1 <span aria-hidden="true">↗</span></a>
+              </li>
+              <li>
+                <div class="guide-step-heading"><span aria-hidden="true">02</span><h3>Create a feature branch</h3><span class="guide-duration">18 min</span></div>
+                <p>Create a branch for one focused improvement. This keeps the main branch stable while you work.</p>
+                <pre><code>git switch -c feature/my-improvement</code></pre>
+                <a class="text-link" href="#learning-path" data-route="learning-path" data-focus-lesson="branch">Practice lesson 2 <span aria-hidden="true">↗</span></a>
+              </li>
+              <li>
+                <div class="guide-step-heading"><span aria-hidden="true">03</span><h3>Build, test, and commit</h3><span class="guide-duration">15 min</span></div>
+                <p>Make a small change, run the project's checks, and inspect the diff. Stage only the files you intend to include.</p>
+                <pre><code>git diff
+git add path/to/changed-file
+git commit -m "Describe the improvement"</code></pre>
+                <p class="guide-tip">For this LearnLoop project, run <code>node --test</code> to check the progress calculator.</p>
+                <a class="text-link" href="#learning-path" data-route="learning-path" data-focus-lesson="build">Practice lesson 3 <span aria-hidden="true">↗</span></a>
+              </li>
+              <li>
+                <div class="guide-step-heading"><span aria-hidden="true">04</span><h3>Push and open a pull request</h3><span class="guide-duration">20 min</span></div>
+                <p>Push your branch. On GitHub, select <strong>Compare &amp; pull request</strong>, verify the target repository and base branch, and describe what changed and how you tested it.</p>
+                <pre><code>git push -u origin feature/my-improvement</code></pre>
+                <p class="guide-tip">For a practice merge you control, target your fork's main branch. An upstream pull request needs the upstream maintainer's acceptance.</p>
+                <a class="text-link" href="#learning-path" data-route="learning-path" data-focus-lesson="request">Practice lesson 4 <span aria-hidden="true">↗</span></a>
+              </li>
+              <li>
+                <div class="guide-step-heading"><span aria-hidden="true">05</span><h3>Review and respond</h3><span class="guide-duration">10 min</span></div>
+                <p>Review the files, tests, and behavior. Leave specific feedback, fix it in a follow-up commit, and push to the same branch. The existing pull request updates automatically.</p>
+                <pre><code>git add path/to/fixed-file
+git commit -m "Address review feedback"
+git push</code></pre>
+                <p class="guide-tip">Ask another account for a formal review. GitHub authors cannot approve their own pull requests; label a one-account exercise as a self-review.</p>
+                <a class="text-link" href="#learning-path" data-route="learning-path" data-focus-lesson="review">Practice lesson 5 <span aria-hidden="true">↗</span></a>
+              </li>
+              <li>
+                <div class="guide-step-heading"><span aria-hidden="true">06</span><h3>Merge and reflect</h3><span class="guide-duration">15 min</span></div>
+                <p>When feedback is resolved and required checks pass, a maintainer can merge the pull request. Confirm GitHub shows <strong>Merged</strong>, then sync your local main branch.</p>
+                <pre><code>git switch main
+git pull --ff-only origin main</code></pre>
+                <p class="guide-tip">Use your repository's actual default branch name if it differs from <code>main</code>. Mark a lesson complete after you practice it; navigation alone never completes it.</p>
+                <a class="text-link" href="#learning-path" data-route="learning-path" data-focus-lesson="merge">Practice lesson 6 <span aria-hidden="true">↗</span></a>
+              </li>
+            </ol>
+            <div class="guide-actions">
+              <a class="button button-primary route-button" href="#learning-path" data-route="learning-path">Open learning path <span aria-hidden="true">↗</span></a>
+              <a class="button button-secondary route-button" href="#my-progress" data-route="my-progress">Check my progress</a>
+            </div>
+          </div>
+        </section>
+        </div>
 
         <div class="right-column">
           <section id="progress" class="progress-card" aria-labelledby="progress-title" tabindex="-1">
@@ -95,6 +185,7 @@
             <ol class="workflow-steps" aria-label="Contribution workflow">
               <li>Fork</li><li>Branch</li><li>Review</li><li>Merge</li>
             </ol>
+            <a class="text-link workflow-footer" href="#workflow-guide" data-route="workflow-guide">Open the six-step guide <span aria-hidden="true">↗</span></a>
           </section>
         </div>
       </div>

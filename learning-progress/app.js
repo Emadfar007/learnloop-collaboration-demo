@@ -23,6 +23,39 @@ const statusPill = document.querySelector('#course-status');
 const progressCaption = document.querySelector('#progress-caption');
 const saveStatus = document.querySelector('#save-status');
 const lessonControls = new Map();
+const progressLessonList = document.querySelector('#progress-lesson-list');
+const progressLessonRows = new Map();
+const nextLessonLink = document.querySelector('#next-lesson-link');
+const ROUTES = {
+  'learning-path': {
+    panel: document.querySelector('#learning-path-view'),
+    heading: document.querySelector('#course-title'),
+    label: 'Learning path',
+    title: 'From fork to finished.',
+    description: 'Make progress you can see. Build skills you can use.',
+  },
+  'my-progress': {
+    panel: document.querySelector('#my-progress-view'),
+    heading: document.querySelector('#progress-detail-title'),
+    label: 'My progress',
+    title: 'Your progress, in focus.',
+    description: 'See completed lessons, time left, and the next step to take.',
+  },
+  'workflow-guide': {
+    panel: document.querySelector('#workflow-guide-view'),
+    heading: document.querySelector('#workflow-guide-title'),
+    label: 'Workflow guide',
+    title: 'A guide for every step.',
+    description: 'Practice the full Git workflow with clear instructions you can follow.',
+  },
+};
+const ROUTE_ALIASES = {
+  curriculum: 'learning-path',
+  progress: 'my-progress',
+  workflow: 'workflow-guide',
+  top: 'learning-path',
+};
+let activeRoute = 'learning-path';
 
 function setSaveStatus(message, warning = false) {
   saveStatus.textContent = message;
@@ -103,7 +136,21 @@ function updateProgress() {
     control.input.checked = completed;
     control.row.classList.toggle('is-complete', completed);
     control.subtitle.textContent = completed ? 'Completed · nice work!' : lesson.detail;
+    const progressRow = progressLessonRows.get(lesson.id);
+    progressRow.row.classList.toggle('is-complete', completed);
+    progressRow.status.textContent = completed ? 'Complete' : 'To do';
   }
+  document.querySelector('#detail-completed-count').textContent = `${result.completedLessons} of ${result.totalLessons}`;
+  document.querySelector('#studied-minutes').textContent = `${result.totalMinutes - result.remainingMinutes} min`;
+  document.querySelector('#detail-percent-complete').textContent = `${result.percentComplete}%`;
+  const nextLesson = LESSONS.find((lesson) => !completedIds.has(lesson.id));
+  document.querySelector('#next-lesson-title').textContent = nextLesson ? nextLesson.title : 'Every lesson is complete!';
+  document.querySelector('#next-lesson-description').textContent = nextLesson
+    ? `${nextLesson.durationMinutes} minutes · ${nextLesson.detail}`
+    : 'You have checked off all six lessons. Revisit any step or reset your checklist for another practice run.';
+  nextLessonLink.textContent = nextLesson ? 'Continue learning ↗' : 'Review learning path ↗';
+  if (nextLesson) nextLessonLink.dataset.focusLesson = nextLesson.id;
+  else delete nextLessonLink.dataset.focusLesson;
 }
 
 function createLessonControls() {
@@ -144,6 +191,75 @@ function createLessonControls() {
   }
 }
 
+function createProgressLessonRows() {
+  for (const [index, lesson] of LESSONS.entries()) {
+    const row = document.createElement('li');
+    const number = document.createElement('span');
+    number.className = 'progress-lesson-number';
+    number.textContent = String(index + 1).padStart(2, '0');
+    number.setAttribute('aria-hidden', 'true');
+    const link = document.createElement('a');
+    link.href = '#learning-path';
+    link.dataset.route = 'learning-path';
+    link.dataset.focusLesson = lesson.id;
+    link.className = 'progress-lesson-link';
+    const title = document.createElement('strong');
+    title.textContent = lesson.title;
+    const detail = document.createElement('span');
+    detail.textContent = `${lesson.durationMinutes} min · Open this lesson`;
+    link.append(title, detail);
+    const status = document.createElement('span');
+    status.className = 'lesson-state';
+    status.textContent = 'To do';
+    row.append(number, link, status);
+    progressLessonList.append(row);
+    progressLessonRows.set(lesson.id, { row, status });
+  }
+}
+
+function routeFromHash() {
+  const hash = window.location.hash.slice(1);
+  if (Object.hasOwn(ROUTES, hash)) return hash;
+  return Object.hasOwn(ROUTE_ALIASES, hash) ? ROUTE_ALIASES[hash] : 'learning-path';
+}
+
+function showRoute(route, { focusHeading = false, focusLesson } = {}) {
+  const selected = ROUTES[route];
+  for (const [name, view] of Object.entries(ROUTES)) view.panel.hidden = name !== route;
+  for (const link of document.querySelectorAll('.nav-link[data-route]')) {
+    const current = link.dataset.route === route;
+    link.classList.toggle('is-current', current);
+    if (current) link.setAttribute('aria-current', 'page');
+    else link.removeAttribute('aria-current');
+  }
+  document.querySelector('#page-title').textContent = selected.title;
+  document.querySelector('#page-description').textContent = selected.description;
+  document.title = `LearnLoop · ${selected.label}`;
+  activeRoute = route;
+  if (route === 'learning-path' && lessonControls.has(focusLesson)) lessonControls.get(focusLesson).input.focus();
+  else if (focusHeading) selected.heading.focus();
+}
+
+function syncRouteFromLocation() {
+  const route = routeFromHash();
+  const focusWasInPreviousView = ROUTES[activeRoute].panel.contains(document.activeElement);
+  if (window.location.hash !== `#${route}`) window.history.replaceState(null, '', `#${route}`);
+  showRoute(route, { focusHeading: route !== activeRoute && focusWasInPreviousView });
+}
+
+document.addEventListener('click', (event) => {
+  if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  const link = event.target instanceof Element ? event.target.closest('a[data-route]') : null;
+  if (!link || !Object.hasOwn(ROUTES, link.dataset.route)) return;
+  event.preventDefault();
+  const route = link.dataset.route;
+  if (window.location.hash !== `#${route}`) window.history.pushState(null, '', `#${route}`);
+  showRoute(route, { focusHeading: true, focusLesson: link.dataset.focusLesson });
+});
+
+window.addEventListener('popstate', syncRouteFromLocation);
+window.addEventListener('hashchange', syncRouteFromLocation);
+
 document.querySelector('#complete-all').addEventListener('click', () => {
   completedIds = new Set(validIds);
   updateProgress();
@@ -158,4 +274,6 @@ document.querySelector('#reset-progress').addEventListener('click', () => {
 
 loadProgress();
 createLessonControls();
+createProgressLessonRows();
 updateProgress();
+syncRouteFromLocation();
