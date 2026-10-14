@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#155e51">
+    <title>LearnLoop · Course Progress Lab</title>
+    <link rel="stylesheet" href="./styles.css">
+    <script type="module" src="./app.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#curriculum">Skip to course lessons</a>
+    <aside class="sidebar" aria-label="Workspace navigation">
+      <a class="brand" href="#top" aria-label="LearnLoop home">
+        <span class="brand-symbol" aria-hidden="true">↗</span>
+        <span>learnloop<span class="brand-dot">.</span></span>
+      </a>
+      <p class="workspace-label">YOUR WORKSPACE</p>
+      <nav class="navigation" aria-label="Learning workspace">
+        <a href="#curriculum" class="nav-link is-current" aria-current="page">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 8 9-5 9 5-9 5-9-5Zm4 3v6c3 3 7 3 10 0v-6M21 8v8"/></svg>
+          Learning path
+        </a>
+        <a href="#progress" class="nav-link">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19V9m7 10V4m7 15v-7M3 21h18"/></svg>
+          My progress
+        </a>
+        <a href="#workflow" class="nav-link">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="7" height="6" rx="2"/><rect x="14" y="14" width="7" height="6" rx="2"/><path d="M6 10v7h8M17 14V7h-7"/></svg>
+          Workflow guide
+        </a>
+      </nav>
+      <div class="sidebar-note">
+        <span class="note-spark" aria-hidden="true">✦</span>
+        <h2>Small steps.<br>Real momentum.</h2>
+        <p>Practice a complete Git workflow, one lesson at a time.</p>
+      </div>
+      <div class="local-badge"><span aria-hidden="true"></span> Local practice demo</div>
+    </aside>
+
+    <main id="top" class="app-main">
+      <header class="page-heading">
+        <div>
+          <p class="eyebrow">COURSE PROGRESS LAB</p>
+          <h1>From fork to finished.</h1>
+          <p class="heading-description">Make progress you can see. Build skills you can use.</p>
+        </div>
+        <span class="practice-pill"><span aria-hidden="true">✦</span> Your practice workspace</span>
+      </header>
+
+      <div class="learning-grid">
+        <section class="course-card" aria-labelledby="course-title">
+          <div class="course-header">
+            <span class="course-tag">GIT &amp; GITHUB · PRACTICAL COURSE</span>
+            <h2 id="course-title">Git collaboration,<br>a skill you can practice.</h2>
+            <p>Six focused lessons. One complete contribution.</p>
+            <div class="header-decoration" aria-hidden="true"><span>↗</span></div>
+          </div>
+          <div id="curriculum" class="curriculum" tabindex="-1">
+            <div class="section-heading">
+              <h3>Your course roadmap</h3>
+              <span>6 lessons · 90 min</span>
+            </div>
+            <div id="lesson-list" class="lesson-list"></div>
+            <p class="course-footnote">Check off each lesson when you finish practicing it.</p>
+          </div>
+        </section>
+
+        <div class="right-column">
+          <section id="progress" class="progress-card" aria-labelledby="progress-title" tabindex="-1">
+            <div class="progress-heading">
+              <h2 id="progress-title">Your learning momentum</h2>
+              <span id="course-status" class="status-pill">Not started</span>
+            </div>
+            <div class="progress-summary">
+              <div class="completion-number"><span id="percent-complete">0</span><span class="percent-sign">%</span></div>
+              <p id="progress-caption" class="progress-caption">A fresh start. Your first step is ready.</p>
+            </div>
+            <label class="visually-hidden" for="course-progress">Course completion by lesson count</label>
+            <progress id="course-progress" max="100" value="0">0%</progress>
+            <div class="metrics">
+              <div><strong><span id="completed-count">0</span><span class="metric-divider"> / </span><span id="total-count">6</span></strong><span>Lessons complete</span></div>
+              <div><strong><span id="remaining-minutes">90</span><span class="metric-unit"> min</span></strong><span>Study time left</span></div>
+            </div>
+            <div class="progress-actions">
+              <button id="complete-all" class="button button-primary" type="button">Mark all complete <span aria-hidden="true">↗</span></button>
+              <button id="reset-progress" class="button button-secondary" type="button">Reset progress</button>
+            </div>
+            <p id="save-status" class="save-status" role="status" aria-live="polite" aria-atomic="true">Loading your saved progress…</p>
+          </section>
+
+          <section id="workflow" class="workflow-card" aria-labelledby="workflow-title" tabindex="-1">
+            <div class="workflow-heading"><span class="workflow-icon" aria-hidden="true">⌘</span><h2 id="workflow-title">Learn it. Then ship it.</h2></div>
+            <p>This course follows a real contribution from your first fork to a reviewed merge.</p>
+            <ol class="workflow-steps" aria-label="Contribution workflow">
+              <li>Fork</li><li>Branch</li><li>Review</li><li>Merge</li>
+            </ol>
+          </section>
+        </div>
+      </div>
+      <footer class="page-footer"><span>Built for practice. Ready for your next contribution.</span><span>Lesson-based progress · Local browser storage</span></footer>
+      <noscript><p class="noscript-message">Enable JavaScript to use the lesson checklist and progress dashboard.</p></noscript>
+    </main>
+  </body>
+</html>
